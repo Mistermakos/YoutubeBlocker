@@ -22,10 +22,7 @@ const refactoredObserver = (fun, ele) => {
 
 const noShorts = () => {
     refactoredObserver(()=>{
-        let el = document.querySelector("[is-shorts]");
-        if (el){
-            el.remove()
-        }
+        document.querySelector("[is-shorts]").remove()
     }, document.body )
 }
 
