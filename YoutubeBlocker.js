@@ -13,7 +13,7 @@ const noShorts = () => {
     //Waits for changes (dynamicly loaded page requires this), then disconects.
     let observer = new MutationObserver((mutations, obs) => {
         let el = document.querySelector("[is-shorts]");
-        if (el) {
+        if (el){
             el.style.display = "none"
             obs.disconnect()
         }
@@ -41,11 +41,30 @@ const noVideosOnMainSite = () => {
     });
 }
 
-(function () {
+const commentsOnly = () => {
+    //Waits for changes (dynamicly loaded page requires this), then disconects.
+    let observer = new MutationObserver((mutations, obs) => {
+        let el = document.body;
+        if (el) {
+            document.getElementById("secondary").remove();
+            obs.disconnect()
+        }
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+(function() {
     //dict: path -> function
     const routes = {
         "/": () => {
             noVideosOnMainSite();
+        },
+        "/watch": () => {
+            commentsOnly();
         },
         "/feed/subscriptions": () => {
             noShorts();
