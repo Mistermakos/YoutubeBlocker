@@ -9,52 +9,36 @@
 // @grant        none
 // ==/UserScript==
 
-const noShorts = () => {
-    //Waits for changes (dynamicly loaded page requires this), then disconects.
+const refactoredObserver = (fun, ele) => {
+    //Waits for changes (dynamicly loaded page requires this), and uses passed function
     let observer = new MutationObserver((mutations, obs) => {
-        let el = document.querySelector("[is-shorts]");
-        if (el){
-            el.style.display = "none"
-            obs.disconnect()
-        }
-    });
+        fun();
+    })
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
+    observer.observe(ele, {
+        childList: true,subtree: true
     })
 }
 
-const noVideosOnMainSite = () => {
-    //Waits for changes (dynamicly loaded page requires this), then disconects.
-    let observer = new MutationObserver((mutations, obs) => {
-        let el = document.body;
-        if (el) {
-            document.getElementsByTagName("ytd-rich-grid-renderer")[0].style.display = "none";
-            obs.disconnect()
+const noShorts = () => {
+    refactoredObserver(()=>{
+        let el = document.querySelector("[is-shorts]");
+        if (el){
+            el.remove()
         }
-    });
+    }, document.body )
+}
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+const noVideosOnMainSite = () => {
+    refactoredObserver(()=>{
+        document.getElementsByTagName("ytd-rich-grid-renderer")[0].style.display = "none";
+    }, document.body )
 }
 
 const commentsOnly = () => {
-    //Waits for changes (dynamicly loaded page requires this), then disconects.
-    let observer = new MutationObserver((mutations, obs) => {
-        let el = document.body;
-        if (el) {
-            document.getElementById("secondary").remove();
-            obs.disconnect()
-        }
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    refactoredObserver(()=>{
+        document.getElementById("secondary").remove();
+    }, document.body )
 }
 
 (function() {
